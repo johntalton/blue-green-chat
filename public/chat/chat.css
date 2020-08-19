@@ -1,0 +1,142 @@
+:root {
+  --color-debug: red;
+}
+
+.Debug { border: 2px solid var(--color-debug); }
+
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  /* position: relative; */
+  height: 100%;
+}
+
+body {
+  background: var(--color-theme-base);
+	color: var(--color-theme-base-text);
+  /* font-family: -apple-system, Roboto, "Segoe UI"; */
+  font-family: overpass;
+}
+
+#containor {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+#containor.Sending {
+  border: 5px solid var(--color-debug);
+}
+#containor.Sending #form > #message {
+  background-color: var(--color-debug);
+}
+
+
+header {
+  flex: 0;
+
+  min-height: 2em;
+  width: 100%;
+  font-size: 2em;
+  background-color: var(--color-header);
+}
+
+
+
+#form {
+  flex: 1;
+  display: flex;
+  height: 100%;
+}
+#form label {
+  flex: 0;
+  display: none;
+}
+#form input {
+  flex: 1;
+
+  /* height: 100%; */
+  width: 100%;
+}
+#form input:read-only {
+  border: 3px dashed red;
+}
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+.Sending #form #send {
+  animation: rotation 2s infinite linear;
+
+}
+#form #send {
+  flex: 0;
+
+  font-size: 1em;
+
+  padding: 0 10px;
+  border: 1px solid var(--color-send-button-border);
+  border-radius: .25em;
+  background-color: var(--color-send-button-background);
+  color: var(--color-send-button-color);
+}
+
+
+
+#failure {
+  flex: 0;
+
+  overflow: hidden;
+
+  width: 100%;
+  background-color: var(--color-failure-background);
+  color: var(--color-failure-color);
+  border-radius: .5em;
+
+  transition-property: flex;
+  transition-duration: 0.25s;
+  transition-delay: 0;
+  transition-timing-function: ease-in;
+}
+.SendFailure #failure {
+  flex: 1;
+  padding: 0.5em;
+  margin: 0.25em;
+}
+
+
+
+
+/* ******** *
+ Chat window
+* ******** */
+#chat {
+  flex: 10;
+  flex-shrink: 1;
+
+  overflow: auto;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  width: 100%;
+  background-color: var(--color-chat-window);
+}
+#chat > div {
+  border-radius: 2px;
+  background-color: var(--color-chat-bubble);
+  margin: 1px;
+  padding: 5px 10px;
+  color: var(--color-chat-bubble-text);
+}

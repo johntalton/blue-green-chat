@@ -1,0 +1,31 @@
+{
+  "name": "ChatService",
+  "endpoints": [
+    { "urn": "urn:websocket/", "url": "/ws", "schema": "/private/schemas/ws.json", "active": false },
+
+    { "urn": "urn:message/", "url": "/message", "schema": "/private/schemas/msg.json" },
+    { "urn": "urn:event-stream/", "url": "/es/:channel", "schema": "/private/schemas/es.json" }
+  ],
+  "services": [
+    { "urn": "urn:service/ws", "url": "/private/ws.js", "active": false },
+
+    { "urn": "urn:service/message", "url": "/private/message.js" },
+    { "urn": "urn:service/event-stream", "url": "/private/es.js" },
+
+    { "urn": "urn:service/storage", "url": "/private/storage.js" },
+    { "urn": "urn:service/log", "url": "/private/log.js" }
+  ],
+  "bindings": [
+    { "from": "urn:websocket/", "to": "urn:service/message", "active": false },
+    { "from": "urn:storage/create", "to": "urn:service/ws", "active": false },
+
+    { "from": "urn:message/", "to": "urn:service/message" },
+    { "from": "urn:event-stream/", "to": "urn:service/event-stream" },
+    { "from": "urn:storage/create", "to": "urn:service/event-stream" },
+
+    { "from": "*", "to": "urn:service/log" }
+  ],
+  "scripts": [
+    { "url": "/private/message.js", "src": "port.on('message', m => storage.create(m))" }
+  ]
+}

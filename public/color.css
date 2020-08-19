@@ -1,0 +1,43 @@
+/* https://una.im/css-color-theming/ */
+:root {
+	--colorPrimary: rgb(42, 16, 216);
+	--colorPrimary-h: 250;
+	--colorPrimary-s: 84%;
+	--colorPrimary-l: 48%;
+
+	/* --colorPrimary: hsl(var(--colorPrimary-h), var(--colorPrimary-s), var(--colorPrimary-l)); */
+
+
+	--lighten-percentage: 20%;
+	--darken-percentage: 15%;
+
+	--colorPrimary--light: hsl(
+		var(--colorPrimary-h),
+		var(--colorPrimary-s),
+		calc(var(--colorPrimary-l) + var(--lighten-percentage)));
+
+	--colorPrimary--dark: hsl(
+		var(--colorPrimary-h),
+		var(--colorPrimary-s),
+		calc(var(--colorPrimary-l) - var(--darken-percentage)));
+
+	--colorPrimary--complement: hsl(
+		calc(var(--colorPrimary-h) + 180),
+		var(--colorPrimary-s),
+		var(--colorPrimary-l));
+
+	--colorPrimary--triad1: hsl(
+		calc(var(--colorPrimary-h) + 120),
+		var(--colorPrimary-s),
+		var(--colorPrimary-l));
+
+	--colorPrimary--triad2: hsl(
+		calc(var(--colorPrimary-h) + 240),
+		var(--colorPrimary-s), v
+		ar(--colorPrimary-l)();
+
+	--contrastThreshold: 60%;
+
+	--primarySwitch: calc((var(--colorPrimary-l) - var(--contrastThreshold)) * -100);
+    --colorPrimary--contrast: hsl(0, 0%, var(--primaryswitch));
+}

@@ -1,0 +1,17 @@
+@import url("/static/color.css");
+
+#containor {
+    --color-theme-base: red;
+    --color-theme-base-text: white;
+
+    --color-header: red;
+    --color-send-button-border: red;
+    --color-send-button-background: var(--colorPrimary);
+    --color-failure-background: red;
+    --color-failure-color: black;
+    --color-send-button-color: var(--colorPrimary--contrast);
+
+    --color-chat-window: var(--colorPrimary--dark);
+    --color-chat-bubble: var(--colorPrimary--triad2);
+    --color-chat-bubble-text: black;
+}
