@@ -1,10 +1,10 @@
 {
   "name": "ChatService",
   "endpoints": [
-    { "urn": "urn:websocket/", "url": "/ws", "schema": "/private/schemas/ws.json", "active": false },
+    { "urn": "urn:websocket/", "url": "/ws",  "active": false },
 
-    { "urn": "urn:message/", "url": "/message", "schema": "/private/schemas/msg.json" },
-    { "urn": "urn:event-stream/", "url": "/es/:channel", "schema": "/private/schemas/es.json" }
+    { "urn": "urn:message/", "url": "/message"},
+    { "urn": "urn:event-stream/", "url": "/es/:channel" }
   ],
   "services": [
     { "urn": "urn:service/ws", "url": "/private/ws.js", "active": false },
@@ -12,7 +12,6 @@
     { "urn": "urn:service/message", "url": "/private/message.js" },
     { "urn": "urn:service/event-stream", "url": "/private/es.js" },
 
-    { "urn": "urn:service/storage", "url": "/private/storage.js" },
     { "urn": "urn:service/log", "url": "/private/log.js" }
   ],
   "bindings": [
@@ -21,11 +20,16 @@
 
     { "from": "urn:message/", "to": "urn:service/message" },
     { "from": "urn:event-stream/", "to": "urn:service/event-stream" },
-    { "from": "urn:storage/create", "to": "urn:service/event-stream" },
 
     { "from": "*", "to": "urn:service/log" }
   ],
   "scripts": [
-    { "url": "/private/message.js", "src": "port.on('message', m => storage.create(m))" }
+    { "url": "/private/message.js", "src": "port.on('message', m => Storage.create('urn:storage/local', m))" }
+  ],
+  "gateways": [
+    { "urn": "urn:gateway/local", "url": "mqtt:local-mqtt/" }
+  ],
+  "stores": [
+    { "urn": "urn:storage/local", "url": "/data" }
   ]
 }

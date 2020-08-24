@@ -1,7 +1,7 @@
 const express = require('express')
 
-export class RestService {
-  extendRoute(port) {
+class RestService {
+  static router(restPort) {
     const router = express.Router()
 
     router.get('/', (req, res) => {
@@ -9,16 +9,12 @@ export class RestService {
     })
 
     router.post('/message', (req, res) => {
-      try {
-        console.log('message router posting message to api port', req.body)
-        port.postMessage({ type: 'post', body: req.body })
-        res.send({ messageCreated: false })
-      }
-      catch (e) {
-        console.log('post message error', e)
-      }
+      restPort.postMessage({ type: req.method, body: req.body })
+      res.send({ messageCreated: false })
     })
 
     return router
   }
 }
+
+module.exports = { RestService }

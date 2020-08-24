@@ -1,6 +1,9 @@
+const slowDown = require("express-slow-down")
 
-export const speedLimiter = slowDown({
+const speedLimiter = slowDown({
   windowMs: 1 * 60 * 1000,
   delayAfter: 100, // allowed requests per winsowMS
   delayMs: 500 // additive value
 })
+
+module.exports = { speedLimiter }

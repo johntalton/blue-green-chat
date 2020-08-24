@@ -1,6 +1,8 @@
+const rateLimit = require("express-rate-limit")
 
-export const speedLimiter = slowDown({
+const rateLimiter = rateLimit({
   windowMs: 1 * 60 * 1000,
-  delayAfter: 100, // allowed requests per winsowMS
-  delayMs: 500 // additive value
+  max: 100
 })
+
+module.exports = { rateLimiter }

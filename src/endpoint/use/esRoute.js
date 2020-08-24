@@ -55,7 +55,7 @@ function addSocketOptions(req) {
 }
 
 
-function esRoute(port) {
+function esRoute(eventStreamPort) {
   const route = express.Router()
 
   route.get('/:feed', (req, res) => {
@@ -79,18 +79,18 @@ function esRoute(port) {
     //channel.port1.onmessageerror = () => { res.close(); port.postMessage({ type: EVENT.CLOSE }) }
 
     // handle client closes
-    req.on('close', err => channel.port1.postMessage({ type: EVENT.CLOSE }, err))
+    req.on('close', err => channel.port1.postMessage({ type: EVENT.CLOSE, message: err?.message }, err))
 
     // end http setup of event stream by sending OK (200)
     res.writeHead(200);
 
-    res.write('retry: 10000\n\n') // sets retyr timeout in ms
+    res.write('retry: 10000\n\n') // sets retry timeout in ms
 
     const writeBOM = false
     if(writeBOM) { res.write(BOM) }
 
     // inform consumer
-    port.postMessage({
+    eventStreamPort.postMessage({
       type: EVENT.CONNECT,
       feed: req.params.feed,
       lastEventID,

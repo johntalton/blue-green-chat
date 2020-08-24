@@ -4,25 +4,26 @@ const express = require('express')
 
 const cors = require('cors')
 const helmet = require("helmet")
-const rateLimit = require("express-rate-limit")
-const slowDown = require("express-slow-down")
 const compression = require('compression')
 const morgan = require('morgan')
 
-const { errorHandler, notFound } = require('./use')
+const { RestService, errorHandler, notFound, rateLimiter, speedLimiter } = require('./use')
+const { esRoute } = require('./use/esRoute.js')
+
+console.log(RestService.router)
 
 const MORGAN_BASIC = ':method :url :status :res[content-length] @ :response-time ms'
 const MORGAN_EXT = ':status :method :url HTTP/:http-version  :remote-addr @ :response-time ms\x1b[0m'
 
-export class EndpointService {
-  static endpoint() {
+class EndpointService {
+  static endpoint(restPort, eventStreamPort) {
     const app = express()
     //
     app.set('trust proxy', ['loopback']);
 
     app
       .use(morgan(MORGAN_EXT))
-      .use(limiter)
+      .use(rateLimiter)
       .use(speedLimiter)
 
     if(false) app.use(helmet())
@@ -31,8 +32,8 @@ export class EndpointService {
     app.use('/services', express.Router()
       .use(cors())
       .use(express.json())
-      .use('/', APIRoute.extend(channelAPI.port1))
-      .use('/es', esRoute(channelES.port1)))
+      .use('/', RestService.router(restPort))
+      .use('/es', esRoute(eventStreamPort)))
 
     if(true) app.use('/static', express.static('./public'))
 
@@ -42,3 +43,5 @@ export class EndpointService {
     return app
   }
 }
+
+module.exports = { EndpointService }
