@@ -12,16 +12,34 @@ const { bindService } = require('./application')
 const credentials = {} // = { key: privateKey, cert: certificate };
 
 const channels = {
-  endpoint: new MessageChannel(),
-  eventstream: new MessageChannel(),
-  script: new MessageChannel()
+  endpoint: {
+    rest: new MessageChannel(),
+    eventstream: new MessageChannel(),
+  },
+  script: {
+    message: new MessageChannel(),
+    event: new MessageChannel(),
+    persist: new MessageChannel()
+  }
 }
 
-const endpoint = EndpointService.endpoint(channels.endpoint.port1, channels.eventstream.port1)
-const httpServer = http.createServer(endpoint);
+const eproute = EndpointService.endpoint(channels.endpoint.rest.port1, channels.endpoint.eventstream.port1)
+const httpServer = http.createServer(eproute);
 
-bindService('urn:service/message', channels.endpoint.port2, channels)
-bindService('urn:service/event', channels.eventstream.port2, channels)
+async function scripts() {
+  await bindService('urn:service/message', channels.script.message.port1)
+  await bindService('urn:service/event', channels.script.event.port1)
+  await bindService('urn:service/persist', channels.script.persist.port1)
+}
+scripts()
+
+channels.endpoint.rest.port2.onmessage = msg => {
+  //channels.script.message.port2.postMessage({ type: msg.data.type, body: msg.data.body })
+  channels.script.event.port2.postMessage({ type: 'broadcast', body: msg.data.body })
+}
+channels.endpoint.eventstream.port2.onmessage = msg => {
+  channels.script.event.port2.postMessage({ type: 'connect', body: msg.data.body, port: msg.data.port }, [msg.data.port])
+}
 
 //  const ip = req.socket.remoteAddress
 //  const forwardedFor = req.headers['x-forwarded-for']//.split(/\s*,\s*/)[0];

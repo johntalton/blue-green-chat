@@ -4,32 +4,30 @@
     { "urn": "urn:websocket/", "url": "/ws",  "active": false },
 
     { "urn": "urn:message/", "url": "/message"},
-    { "urn": "urn:event-stream/", "url": "/es/:channel" }
+    { "urn": "urn:event-stream/", "url": "/es/chat" }
   ],
   "services": [
-    { "urn": "urn:service/ws", "url": "/private/ws.js", "active": false },
+    { "urn": "urn:service/ws", "url": "/private/chat/ws.js", "active": false },
 
-    { "urn": "urn:service/message", "url": "/private/message.js" },
-    { "urn": "urn:service/event-stream", "url": "/private/es.js" },
+    { "urn": "urn:service/message", "url": "/private/chat/message.js" },
+    { "urn": "urn:service/event-stream", "url": "/private/chat/event.js" },
 
-    { "urn": "urn:service/log", "url": "/private/log.js" }
+    { "urn": "urn:service/persist", "url": "/private/chat/persist.js" }
   ],
   "bindings": [
     { "from": "urn:websocket/", "to": "urn:service/message", "active": false },
-    { "from": "urn:storage/create", "to": "urn:service/ws", "active": false },
+    { "from": "urn:service/persist", "to": "urn:service/ws", "active": false },
 
     { "from": "urn:message/", "to": "urn:service/message" },
-    { "from": "urn:event-stream/", "to": "urn:service/event-stream" },
-
-    { "from": "*", "to": "urn:service/log" }
+    { "from": "urn:event-stream/", "to": "urn:service/event-stream" }
   ],
   "scripts": [
-    { "url": "/private/message.js", "src": "port.on('message', m => Storage.create('urn:storage/local', m))" }
+    { "url": "/private/chat/log.js", "src": "port.on('message', m => Storage.update('urn:storage/log', m))" }
   ],
   "gateways": [
     { "urn": "urn:gateway/local", "url": "mqtt:local-mqtt/" }
   ],
   "stores": [
-    { "urn": "urn:storage/local", "url": "/data" }
+    { "urn": "urn:storage/local", "url": "/private/chat/stroy" }
   ]
 }

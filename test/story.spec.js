@@ -5,9 +5,13 @@ const { expect } = require('chai')
 
 const { Story } = require('../private/story')
 
-const TEST_STORY_PREFIX = './test/story/test-story-'
+const TEST_STORY_DIR = './test/story/'
+const TEST_STORY_PREFIX = TEST_STORY_DIR + 'test-story-'
 
 describe('story', () => {
+  before(async () => await fs.mkdir(TEST_STORY_DIR))
+  after(async () => await fs.rmdir(TEST_STORY_DIR, { recursive: true }))
+
   describe('#store', () => {})
 
   describe('#list', () => {
