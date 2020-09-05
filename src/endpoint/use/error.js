@@ -1,7 +1,7 @@
 function errorHandler(err, req, res, next) {
-  console.log('ERROR Handler', err.toString())
+  console.log('ERROR', err)
   if(res.statusCode === 200) res.status(500)
-  else res.status(res.statusCode)
+  //else res.status(res.statusCode)
 
   res.json({ message: err.message })
 }

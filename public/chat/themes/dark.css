@@ -13,5 +13,5 @@
 
     --color-chat-window: var(--colorPrimary--dark);
     --color-chat-bubble: var(--colorPrimary--triad2);
-    --color-chat-bubble-text: black;
+    --color-chat-bubble-text: ivory;
 }

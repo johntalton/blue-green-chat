@@ -10,7 +10,7 @@ const EVENT = {
 const MIME_ALT = 'application/x-dom-event-stream'
 const MIME = 'text/event-stream'
 
-const BOM = 0xFEFF // BYTE ORDER MARK
+const BOM = '\xFE\xFF' // BYTE ORDER MARK
 
 const ENDING = {
   LF: '\n',
@@ -60,6 +60,9 @@ function esRoute(eventStreamPort) {
 
   route.get('/:feed', (req, res) => {
     console.log('EventSource Route', req.params.feed)
+    const writeBOM = true
+    const retryTimeMs = 10 * 1000
+
     //
     addSocketOptions(req)
 
@@ -84,9 +87,9 @@ function esRoute(eventStreamPort) {
     // end http setup of event stream by sending OK (200)
     res.writeHead(200);
 
-    res.write('retry: 10000\n\n') // sets retry timeout in ms
+    // set retry timeout
+    res.write(ES.RETRY + retryTimeMs + ES.END_OF_LINE)
 
-    const writeBOM = false
     if(writeBOM) { res.write(BOM) }
 
     // inform consumer
@@ -107,7 +110,7 @@ function formatMessageToEventStream(obj) {
 }
 
 function formatMultiLineMessageToEventStream(obj) {
-  const comment = ES.COMMENT + 'yo' + ES.END_OF_LINE
+  const comment = ES.COMMENT + '🦄' + ES.END_OF_LINE
   const event = obj.event ? ES.EVENT + obj.event + ES.END_OF_LINE : undefined
   const id = obj.id ? ES.ID + obj.id + ES.END_OF_LINE : undefined
   const datas = obj.multilineData.map(d => ES.DATA + d + ES.END_OF_LINE)
