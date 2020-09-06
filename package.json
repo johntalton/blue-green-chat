@@ -2,12 +2,12 @@
   "name": "@johntalton/event-source",
   "version": "1.0.0",
   "description": "",
-  "main": "lib/index.js",
+  "main": "lib/src/index.js",
   "exports": {
-    "import": "./src/index.mjs",
-    "require": "./lib/index.js"
+    "import": "./src/index.js",
+    "require": "./lib/src//index.js"
   },
-  "type": "commonjs",
+  "type": "module",
   "files": [
     "lib/**/*.js",
     "lib/**/*.d.ts",
@@ -17,7 +17,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "test": "mocha",
-    "dev": "nodemon .",
+    "dev": "nodemon ./lib/src",
     "build": "tsc -p .",
     "build:watch": "npm run build -- -w"
   },
@@ -45,6 +45,9 @@
     "ws": "^7.3.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.7",
+    "@types/node": "^14.6.4",
+    "@types/uuid": "^8.3.0",
     "chai": "^4.2.0",
     "mocha": "^8.1.1",
     "nodemon": "^2.0.4",

@@ -1,15 +1,15 @@
 
-const { MessageChannel } = require('worker_threads')
+import { MessageChannel } from 'worker_threads'
 
-const http = require('http')
-const https = require('https')
+import * as http from 'http'
+// import * as https from 'https'
 
-const { EndpointService } = require('./endpoint')
-const { bindService } = require('./application')
+import { EndpointService } from './endpoint/'
+import { bindService } from './application'
 
 //var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
 //var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
-const credentials = {} // = { key: privateKey, cert: certificate };
+// const credentials = {} // = { key: privateKey, cert: certificate };
 
 const channels = {
   endpoint: {
@@ -33,13 +33,13 @@ async function scripts() {
 }
 scripts()
 
-channels.endpoint.rest.port2.onmessage = msg => {
+channels.endpoint.rest.port2.addListener('message', msg => {
   //channels.script.message.port2.postMessage({ type: msg.data.type, body: msg.data.body })
   channels.script.event.port2.postMessage({ type: 'broadcast', body: msg.data.body })
-}
-channels.endpoint.eventstream.port2.onmessage = msg => {
+})
+channels.endpoint.eventstream.port2.addListener('message', msg => {
   channels.script.event.port2.postMessage({ type: 'connect', body: msg.data.body, port: msg.data.port }, [msg.data.port])
-}
+})
 
 //  const ip = req.socket.remoteAddress
 //  const forwardedFor = req.headers['x-forwarded-for']//.split(/\s*,\s*/)[0];

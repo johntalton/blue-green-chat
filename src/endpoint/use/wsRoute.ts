@@ -1,16 +1,11 @@
-const express = require('express')
-const ws = require('ws')
-
-
+import * as express from 'express'
+//const ws = require('ws')
 
 // const WebSocket = require('ws')
 // const { v4: uuidv4 } = require('uuid');
 // //const { apiRoute, wsRoute, esRoute } = require('./routes')
 
-
 // const wss = new WebSocket.Server({ server: httpServer })
-
-
 
 // wss.on('connection', function connection(ws, req) {
 //   ws.on('message', function incoming(message) {
@@ -20,10 +15,7 @@ const ws = require('ws')
 //   ws.send('{ test: true }');
 // });
 
-
-function wsRoute() {
+export function wsRoute() {
   const route = express.Router()
   return route
 }
-
-module.exports = { wsRoute }

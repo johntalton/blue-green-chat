@@ -1,13 +1,13 @@
-const { MessageChannel } = require('worker_threads')
+import { MessageChannel, MessagePort } from 'worker_threads'
 
-const express = require('express')
+import * as express from 'express'
 
 const EVENT = {
   CLOSE: 'close',
   CONNECT: 'connect'
 }
 
-const MIME_ALT = 'application/x-dom-event-stream'
+// const MIME_ALT = 'application/x-dom-event-stream'
 const MIME = 'text/event-stream'
 
 const BOM = '\xFE\xFF' // BYTE ORDER MARK
@@ -39,7 +39,7 @@ const HEADER = {
   LAST_EVENT_ID: 'Last-Event-ID'
 }
 
-function addHeaders(res, addKeepAlive) {
+function addHeaders(res: express.Response, addKeepAlive: boolean) {
   res.setHeader(HEADER.CONTENT_TYPE, MIME);
   res.setHeader(HEADER.CACHE_CONTROL, 'no-cache, no-transform');
   res.setHeader(HEADER.X_ACCEL_BUFFERING, 'no');
@@ -47,7 +47,7 @@ function addHeaders(res, addKeepAlive) {
   // res.setHeader('Content-Encoding', 'deflate'); // gzip deflate br
  }
 
-function addSocketOptions(req) {
+function addSocketOptions(req: express.Request) {
   req.socket.setNoDelay(true);
   req.socket.setKeepAlive(true);
   //req.socket.setTimeout(Infinity);
@@ -55,7 +55,7 @@ function addSocketOptions(req) {
 }
 
 
-function esRoute(eventStreamPort) {
+export function esRoute(eventStreamPort: MessagePort) {
   const route = express.Router()
 
   route.get('/:feed', (req, res) => {
@@ -74,15 +74,16 @@ function esRoute(eventStreamPort) {
     const lastEventID = req.header(HEADER.LAST_EVENT_ID)
 
     const channel = new MessageChannel()
-    channel.port1.onmessage = msg => {
+    //channel.port1.onmessage = msg => {
+    channel.port1.addListener('message', msg => {
       const lines = formatMessageToEventStream(msg.data)
       console.log('lines', lines)
-      for (line of lines) { res.write(line) }
-    }
+      for (let line of lines) { res.write(line) }
+    })
     //channel.port1.onmessageerror = () => { res.close(); port.postMessage({ type: EVENT.CLOSE }) }
 
     // handle client closes
-    req.on('close', err => channel.port1.postMessage({ type: EVENT.CLOSE, message: err?.message }, err))
+    req.on('close', () => channel.port1.postMessage({ type: EVENT.CLOSE }))
 
     // end http setup of event stream by sending OK (200)
     res.writeHead(200);
@@ -98,7 +99,7 @@ function esRoute(eventStreamPort) {
       feed: req.params.feed,
       lastEventID,
       port: channel.port2
-    }, { transfer: [ channel.port2 ] })
+    }, [ channel.port2 ])
   })
 
   return route
@@ -109,7 +110,7 @@ function formatMessageToEventStream(obj) {
   return formatMultiLineMessageToEventStream({ ...obj, multilineData: mld })
 }
 
-function formatMultiLineMessageToEventStream(obj) {
+function formatMultiLineMessageToEventStream(obj): Array<string> {
   const comment = ES.COMMENT + '🦄' + ES.END_OF_LINE
   const event = obj.event ? ES.EVENT + obj.event + ES.END_OF_LINE : undefined
   const id = obj.id ? ES.ID + obj.id + ES.END_OF_LINE : undefined
@@ -121,5 +122,3 @@ function formatMultiLineMessageToEventStream(obj) {
     comment, event, id, ...datas, retry, ES.FINAL_END_OF_LINE
   ].filter(line => line !== undefined)
 }
-
-module.exports = { esRoute }

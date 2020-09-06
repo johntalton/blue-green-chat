@@ -1,12 +1,16 @@
-const { promises: fs } = require('fs')
-const path = require('path')
+import { promises as fs } from 'fs'
+import * as path from 'path'
 
-const { v4: uuidv4 } = require('uuid')
+import { v4 as uuidv4 } from 'uuid'
+
 const JSON_EXT = 'json'
 const DOT_JSON_EXT = '.' + JSON_EXT
 const WRITE_EXCLUSIVE_FLAG = 'wx'
 
 class FS {
+  private base: string
+  private extention: string
+
   constructor(base) {
     this.base = base
     this.extention = DOT_JSON_EXT
@@ -21,7 +25,7 @@ class FS {
 
   async read(uuid) {
     const name = this.uuidToPath(uuid)
-    return JSON.parse(await fs.readFile(name, { flag: 'r' }))
+    return JSON.parse(await fs.readFile(name, { encoding: 'utf-8', flag: 'r' }))
   }
 
   async list() {
@@ -33,13 +37,15 @@ class FS {
 }
 
 // Story stores data
-class Story {
+export class Story {
+  private backing
+  private namecache
+
   static store(urn, url) {
     return Promise.resolve(new Story(urn, url))
   }
 
   constructor(urn, url) {
-    this.urn = urn
     this.backing = new FS(url)
     this.namecache = {}
   }
@@ -61,5 +67,3 @@ class Story {
     return this.backing.read(uuid)
   }
 }
-
-module.exports = { Story }

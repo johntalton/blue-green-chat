@@ -64,7 +64,7 @@ class UI {
   }
 
   static addMessageToUI(ui, msg) {
-    const msgData = JSON.parse(msg.data).data
+    const msgData = JSON.parse(msg.data)
     console.log('addMessageToUI', msgData)
 
     if(msgData.message !== undefined) {

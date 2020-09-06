@@ -1,6 +1,7 @@
-const { v4: uuidv4 } = require('uuid')
+import { MessagePort } from 'worker_threads'
+import { v4 as uuidv4 } from 'uuid'
 
-const clientPorts = []
+const clientPorts: Array<{ uuid: string, port: MessagePort }> = []
 
 async function handleConnect(msg) {
   console.log('event: client connection - welcome')
@@ -12,12 +13,10 @@ async function handleBroadcast(msg) {
   clientPorts.forEach(client => client.port.postMessage({ uuid: client.uuid, data: msg.data.body }))
 }
 
-async function bindEventStream(scriptPort) {
+export async function handler(scriptPort) {
   scriptPort.onmessage = msg => {
     if(msg.data.type === 'connect') return handleConnect(msg)
     if(msg.data.type === 'broadcast') return handleBroadcast(msg)
     throw new Error('unknown message from es channel: ' + msg.data.type)
   }
 }
-
-module.exports.handler = bindEventStream

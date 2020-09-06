@@ -1,4 +1,4 @@
-async function bindRest(scriptPort) {
+export async function handler(scriptPort) {
   scriptPort.onmessage = msg => {
     if(msg.data.type !== 'POST') throw new Error('unknonw message from api channel: ' + msg.data.type)
 
@@ -7,5 +7,3 @@ async function bindRest(scriptPort) {
     // console.log('app api handler', msg2.data)
   }
 }
-
-module.exports.handler = bindRest

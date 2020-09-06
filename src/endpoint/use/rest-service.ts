@@ -1,7 +1,9 @@
-const express = require('express')
+import { MessagePort } from 'worker_threads'
 
-class RestService {
-  static router(restPort) {
+import * as express from 'express'
+
+export class RestService {
+  static router(restPort: MessagePort) {
     const router = express.Router()
 
     router.get('/', (req, res) => {
@@ -16,5 +18,3 @@ class RestService {
     return router
   }
 }
-
-module.exports = { RestService }

@@ -3,14 +3,13 @@
     "alwaysStrict": false,
     "incremental": true,
     "watch": false,
-    "target": "ES2019",
-    "module": "CommonJS",
+    "target": "ESNext",
+    "module": "ESNext",
     "lib": [
-      "ES2020",
       "ESNext"
     ],
     "strict": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "noUnusedLocals": true,
     "strictNullChecks": true,
     "noImplicitReturns": true,
@@ -32,7 +31,8 @@
   },
   "compileOnSave": true,
   "include": [
-    "src/*.ts"
+    "src/**/*.ts",
+    "private/**/*.ts"
   ],
   "exclude": [
     "node_modules"
