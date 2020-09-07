@@ -1,20 +1,18 @@
-
 import { MessageChannel } from 'worker_threads'
 
-import * as http from 'http'
-// import * as https from 'https'
+import http from 'http'
 
-import { EndpointService } from './endpoint/'
+import { EndpointService } from './endpoint'
 import { bindService } from './application'
 
-//var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
-//var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
+// var privateKey  = fs.readFileSync('sslcert/server.key', 'utf-8');
+// var certificate = fs.readFileSync('sslcert/server.crt', 'utf-8');
 // const credentials = {} // = { key: privateKey, cert: certificate };
 
 const channels = {
   endpoint: {
     rest: new MessageChannel(),
-    eventstream: new MessageChannel(),
+    eventstream: new MessageChannel()
   },
   script: {
     message: new MessageChannel(),
@@ -44,7 +42,7 @@ channels.endpoint.eventstream.port2.addListener('message', msg => {
 //  const ip = req.socket.remoteAddress
 //  const forwardedFor = req.headers['x-forwarded-for']//.split(/\s*,\s*/)[0];
 
-//httpsServer.listen(8443, () => console.log('Server Up (s)'))
+// httpsServer.listen(8443, () => console.log('Server Up (s)'))
 httpServer.listen(8080, () => { console.log('Server Up') })
 process.on('SIGTERM', () => { httpServer.close(() => console.log('Server Down')) })
 process.on('SIGINT', () => httpServer.close(() => console.log('Server Restart')))

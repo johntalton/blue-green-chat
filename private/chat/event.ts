@@ -9,14 +9,13 @@ async function handleConnect(msg) {
 }
 
 async function handleBroadcast(msg) {
-  console.log('event: braodcast')
   clientPorts.forEach(client => client.port.postMessage({ uuid: client.uuid, data: msg.data.body }))
 }
 
 export async function handler(scriptPort) {
   scriptPort.onmessage = msg => {
-    if(msg.data.type === 'connect') return handleConnect(msg)
-    if(msg.data.type === 'broadcast') return handleBroadcast(msg)
+    if(msg.data.type === 'connect') { return handleConnect(msg) }
+    if(msg.data.type === 'broadcast') { return handleBroadcast(msg) }
     throw new Error('unknown message from es channel: ' + msg.data.type)
   }
 }

@@ -4,10 +4,11 @@
     "incremental": true,
     "watch": false,
     "target": "ESNext",
-    "module": "ESNext",
+    "module": "CommonJS",
     "lib": [
       "ESNext"
     ],
+    "esModuleInterop": true,
     "strict": true,
     "noImplicitAny": false,
     "noUnusedLocals": true,

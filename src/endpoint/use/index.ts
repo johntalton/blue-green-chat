@@ -1,6 +1,7 @@
 export { RestService } from './rest-service'
+export { esRoute } from './esRoute'
 
 export { rateLimiter } from './rate-limit'
 export { speedLimiter } from './speed-limit'
 export { notFound } from './not-found'
-export { errorHandler }  from './error'
+export { errorHandler } from './error'

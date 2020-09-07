@@ -1,5 +1,6 @@
-import * as express from 'express'
-//const ws = require('ws')
+import { Router } from 'express'
+
+// const ws = require('ws')
 
 // const WebSocket = require('ws')
 // const { v4: uuidv4 } = require('uuid');
@@ -16,6 +17,6 @@ import * as express from 'express'
 // });
 
 export function wsRoute() {
-  const route = express.Router()
+  const route = Router()
   return route
 }

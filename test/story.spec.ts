@@ -1,18 +1,22 @@
-const { promises: fs } = require('fs')
+/* eslint-disable no-unused-expressions */
+/* eslint-disable spellcheck/spell-checker */
+import fsModule from 'fs'
 
-const { describe, it } = require('mocha')
-const { expect } = require('chai')
+import mochaModule from 'mocha'
+import chaiModule from 'chai'
 
-const { Story } = require('../private/story')
+import { Story } from '../private/chat/story'
+
+const { promises: fs } = fsModule
+const { describe, it, before, after } = mochaModule
+const { expect } = chaiModule
 
 const TEST_STORY_DIR = './test/story/'
 const TEST_STORY_PREFIX = TEST_STORY_DIR + 'test-story-'
 
 describe('story', () => {
-  before(async () => await fs.mkdir(TEST_STORY_DIR))
-  after(async () => await fs.rmdir(TEST_STORY_DIR, { recursive: true }))
-
-  describe('#store', () => {})
+  before(async () => fs.mkdir(TEST_STORY_DIR))
+  after(async () => fs.rmdir(TEST_STORY_DIR, { recursive: true }))
 
   describe('#list', () => {
     it('should return empty list on creation', async () => {
@@ -30,6 +34,7 @@ describe('story', () => {
 
       const pointer = await story.update('bar', { bar: true })
 
+      expect(pointer).to.not.be.empty
       expect(await story.list()).to.be.lengthOf(1)
 
       await fs.rmdir(tempDir, { recursive: true })
@@ -54,6 +59,8 @@ describe('story', () => {
       const story = await Story.store('urn:storage/message', tempDir)
 
       const pointer = await story.update('foo', { bar: true })
+
+      expect(pointer).to.not.be.empty
 
       await fs.rmdir(tempDir, { recursive: true })
     })
@@ -92,7 +99,7 @@ describe('story', () => {
       const pointer = await story.update('quix', { bang: 'buzz' })
       await story.update('quix', { bang: 'fuzz' })
 
-      const data = await story.read('#'+pointer)
+      const data = await story.read('#' + pointer)
 
       expect(data.bang).to.equal('buzz')
 
@@ -108,20 +115,5 @@ describe('story', () => {
 
       await fs.rmdir(tempDir, { recursive: true })
     })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   })
 })

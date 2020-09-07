@@ -6,7 +6,7 @@ const lookup: Record<string, string> = {
   'urn:service/persist': '../private/chat/persist'
 }
 
-export async function bindService(urn: string , scriptPort: MessagePort) {
+export async function bindService(urn: string, scriptPort: MessagePort) {
   if(lookup[urn] !== undefined) {
     const script = await import(lookup[urn])
     return script.handler(scriptPort)

@@ -1,16 +1,15 @@
 import { MessagePort } from 'worker_threads'
+import express from 'express'
 
-import * as express from 'express'
+import cors from 'cors'
+import helmet from 'helmet'
+import compression from 'compression'
+import morgan from 'morgan'
 
-import * as cors from 'cors'
-import * as  helmet from 'helmet'
-import * as compression from 'compression'
-import * as morgan from 'morgan'
-
-import { RestService, errorHandler, notFound, rateLimiter, speedLimiter } from './use'
-import { esRoute } from './use/esRoute.js'
+import { esRoute, RestService, errorHandler, notFound, rateLimiter, speedLimiter } from './use'
 
 // const MORGAN_BASIC = ':method :url :status :res[content-length] @ :response-time ms'
+// eslint-disable-next-line spellcheck/spell-checker
 const MORGAN_EXT = ':status :method :url HTTP/:http-version  :remote-addr @ :response-time ms\x1b[0m'
 
 export class EndpointService {
