@@ -31,12 +31,13 @@ async function scripts() {
 }
 scripts()
 
-channels.endpoint.rest.port2.addListener('message', msg => {
+channels.endpoint.rest.port2.on('message', msg => {
   //channels.script.message.port2.postMessage({ type: msg.data.type, body: msg.data.body })
-  channels.script.event.port2.postMessage({ type: 'broadcast', body: msg.data.body })
+  channels.script.event.port2.postMessage({ type: 'broadcast', body: msg.body })
 })
-channels.endpoint.eventstream.port2.addListener('message', msg => {
-  channels.script.event.port2.postMessage({ type: 'connect', body: msg.data.body, port: msg.data.port }, [msg.data.port])
+channels.endpoint.eventstream.port2.on('message', msg => {
+  console.log('proxy message', msg)
+  channels.script.event.port2.postMessage({ type: 'connect', port: msg.port }, [msg.port])
 })
 
 //  const ip = req.socket.remoteAddress

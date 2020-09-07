@@ -7,7 +7,7 @@
     "import": "./src/index.ts",
     "require": "./lib/src/index.js"
   },
-  "type": "module",
+  "type": "commonjs",
   "files": [
     "lib/**/*.js",
     "lib/**/*.d.ts",
@@ -36,7 +36,7 @@
       "node_modules"
     ],
     "watch": [ "src", "private" ],
-    "exec": "ts-node ./src/index.ts",
+    "exec": "ts-node src/index.ts",
     "ext": "ts"
   },
   "mocha": {

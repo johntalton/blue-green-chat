@@ -4,7 +4,7 @@
     "incremental": true,
     "watch": false,
     "target": "ESNext",
-    "module": "ESNext",
+    "module": "CommonJS",
     "lib": [
       "ESNext"
     ],
@@ -22,7 +22,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "moduleResolution": "node",
-    "isolatedModules": false,
+    "isolatedModules": true,
     "declaration": true,
     "declarationMap": true,
     "diagnostics": true,
