@@ -1,14 +1,14 @@
 import { MessageChannel, MessagePort } from 'worker_threads'
 
-import * as express from 'express'
+import express from 'express'
 
 const EVENT = {
   CLOSE: 'close',
   CONNECT: 'connect'
 }
 
-// const MIME_ALT = 'application/x-dom-event-stream'
-const MIME = 'text/event-stream'
+const MIMES = [ 'text/event-stream', 'application/x-dom-event-stream' ]
+const [MIME] = MIMES
 
 const BOM = '\xFE\xFF' // BYTE ORDER MARK
 
@@ -45,15 +45,32 @@ function addHeaders(res: express.Response, addKeepAlive: boolean) {
   res.setHeader(HEADER.X_ACCEL_BUFFERING, 'no');
   if(addKeepAlive) { res.setHeader(HEADER.CONNECTION, 'keep-alive') }
   // res.setHeader('Content-Encoding', 'deflate'); // gzip deflate br
- }
-
-function addSocketOptions(req: express.Request) {
-  req.socket.setNoDelay(true);
-  req.socket.setKeepAlive(true);
-  //req.socket.setTimeout(Infinity);
-  req.socket.setTimeout(0);
 }
 
+function addSocketOptions(req: express.Request) {
+  const timeout = 0 // Infinity
+  req.socket.setNoDelay(true);
+  req.socket.setKeepAlive(true);
+  req.socket.setTimeout(timeout);
+}
+
+function formatMultiLineMessageToEventStream(obj): Array<string> {
+  const comment = ES.COMMENT + '🦄' + ES.END_OF_LINE
+  const event = obj.event ? ES.EVENT + obj.event + ES.END_OF_LINE : undefined
+  const id = obj.id ? ES.ID + obj.id + ES.END_OF_LINE : undefined
+  const datas = obj.multilineData.map(d => ES.DATA + d + ES.END_OF_LINE)
+  const retry = obj.retry ? ES.RETRY + parseInt(obj.retry, 10) + ES.END_OF_LINE : undefined
+
+  return [
+    // order of field names could be used to fingerprint
+    comment, event, id, ...datas, retry, ES.FINAL_END_OF_LINE
+  ].filter(line => line !== undefined)
+}
+
+function formatMessageToEventStream(obj) {
+  const mld = [ JSON.stringify(obj) ]
+  return formatMultiLineMessageToEventStream({ ...obj, multilineData: mld })
+}
 
 export function esRoute(eventStreamPort: MessagePort) {
   const route = express.Router()
@@ -74,13 +91,11 @@ export function esRoute(eventStreamPort: MessagePort) {
     const lastEventID = req.header(HEADER.LAST_EVENT_ID)
 
     const channel = new MessageChannel()
-    //channel.port1.onmessage = msg => {
     channel.port1.addListener('message', msg => {
       const lines = formatMessageToEventStream(msg.data)
-      console.log('lines', lines)
-      for (let line of lines) { res.write(line) }
+      lines.forEach(line => res.write(line))
     })
-    //channel.port1.onmessageerror = () => { res.close(); port.postMessage({ type: EVENT.CLOSE }) }
+    // channel.port1.onmessageerror = () => { res.close(); port.postMessage({ type: EVENT.CLOSE }) }
 
     // handle client closes
     req.on('close', () => channel.port1.postMessage({ type: EVENT.CLOSE }))
@@ -103,22 +118,4 @@ export function esRoute(eventStreamPort: MessagePort) {
   })
 
   return route
-}
-
-function formatMessageToEventStream(obj) {
-  const mld = [ JSON.stringify(obj) ]
-  return formatMultiLineMessageToEventStream({ ...obj, multilineData: mld })
-}
-
-function formatMultiLineMessageToEventStream(obj): Array<string> {
-  const comment = ES.COMMENT + '🦄' + ES.END_OF_LINE
-  const event = obj.event ? ES.EVENT + obj.event + ES.END_OF_LINE : undefined
-  const id = obj.id ? ES.ID + obj.id + ES.END_OF_LINE : undefined
-  const datas = obj.multilineData.map(d => ES.DATA + d + ES.END_OF_LINE)
-  const retry = obj.retry ? ES.RETRY + parseInt(obj.retry) + ES.END_OF_LINE : undefined
-
-  return [
-    // order of field names could be used to fingerprint
-    comment, event, id, ...datas, retry, ES.FINAL_END_OF_LINE
-  ].filter(line => line !== undefined)
 }

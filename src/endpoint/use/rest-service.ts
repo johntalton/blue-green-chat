@@ -1,10 +1,10 @@
 import { MessagePort } from 'worker_threads'
 
-import { Router } from 'express'
+import express from 'express'
 
 export class RestService {
   static router(restPort: MessagePort) {
-    const router = Router()
+    const router = express.Router()
 
     router.get('/', (req, res) => {
       res.json({ api: true })

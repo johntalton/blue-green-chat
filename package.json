@@ -21,7 +21,7 @@
     "test": "npm run test:mocha",
     "test:mocha": "mocha",
     "Xstart": "node --loader ts-node/esm.mjs  --require ts-node/register ./src/index.ts",
-    "Xstart": "ts-node src/index.ts",
+    "Ystart": "ts-node src/index.ts",
     "dev": "nodemon ./src/index.ts",
     "build": "tsc -p .",
     "build:watch": "npm run build -- -w",

@@ -36,6 +36,7 @@
 
       "import/no-nodejs-modules": "warn",
       "sort-imports": "warn",
-      "require-await": "warn"
+      "require-await": "warn",
+      "import/no-named-as-default-member": "warn"
     }
   }
