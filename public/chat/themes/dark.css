@@ -1,17 +1,21 @@
 @import url("/static/color.css");
 
+:root {
+    --color-debug: red;
+}
+
 #containor {
-    --color-theme-base: red;
+    --color-theme-base: var(--color-debug);
     --color-theme-base-text: white;
 
-    --color-header: red;
-    --color-send-button-border: red;
+    --color-header: darkblue;
+    --color-send-button-border: var(--color-debug);
     --color-send-button-background: var(--colorPrimary);
-    --color-failure-background: red;
+    --color-failure-background: var(--color-debug);
     --color-failure-color: black;
     --color-send-button-color: var(--colorPrimary--contrast);
 
     --color-chat-window: var(--colorPrimary--dark);
-    --color-chat-bubble: var(--colorPrimary--triad2);
+    --color-chat-bubble: var(--colorPrimary--light);
     --color-chat-bubble-text: ivory;
 }

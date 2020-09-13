@@ -7,7 +7,6 @@
 
 	/* --colorPrimary: hsl(var(--colorPrimary-h), var(--colorPrimary-s), var(--colorPrimary-l)); */
 
-
 	--lighten-percentage: 20%;
 	--darken-percentage: 15%;
 
@@ -33,8 +32,8 @@
 
 	--colorPrimary--triad2: hsl(
 		calc(var(--colorPrimary-h) + 240),
-		var(--colorPrimary-s), v
-		ar(--colorPrimary-l)();
+		var(--colorPrimary-s),
+		var(--colorPrimary-l));
 
 	--contrastThreshold: 60%;
 

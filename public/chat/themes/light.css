@@ -4,17 +4,17 @@
 }
 
 #containor {
-    --color-theme-base: yellow;
+    --color-theme-base: lightgreen;
     --color-theme-base-text: white;
 
-    --color-header: red;
+    --color-header: forestgreen;
     --color-send-button-border: darkgoldenrod;
-    --color-send-button-background: wheat;
-    --color-failure-background: crimson;
+    --color-send-button-background: aquamarine;
+    --color-failure-background: forestgreen;
     --color-failure-color: black;
     --color-send-button-color: black;
 
-    --color-chat-window: bisque;
-    --color-chat-bubble: aquamarine;
-    --color-chat-bubble-text: black;
+    --color-chat-window: var(--color-op-dark);
+    --color-chat-bubble: var(--color-op-light);
+    --color-chat-bubble-text: white;
 }

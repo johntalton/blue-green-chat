@@ -32,18 +32,41 @@ async function scripts() {
 scripts()
 
 channels.endpoint.rest.port2.on('message', msg => {
-  //channels.script.message.port2.postMessage({ type: msg.data.type, body: msg.data.body })
+  // channels.script.message.port2.postMessage({ type: msg.data.type, body: msg.data.body })
   channels.script.event.port2.postMessage({ type: 'broadcast', body: msg.body })
+  channels.script.persist.port2.postMessage({ type: 'persist', data: msg.body })
 })
 channels.endpoint.eventstream.port2.on('message', msg => {
-  console.log('proxy message', msg)
+  //console.log('proxy message', msg)
   channels.script.event.port2.postMessage({ type: 'connect', port: msg.port }, [msg.port])
 })
 
 //  const ip = req.socket.remoteAddress
 //  const forwardedFor = req.headers['x-forwarded-for']//.split(/\s*,\s*/)[0];
 
-// httpsServer.listen(8443, () => console.log('Server Up (s)'))
-httpServer.listen(8080, () => { console.log('Server Up') })
-process.on('SIGTERM', () => { httpServer.close(() => console.log('Server Down')) })
-process.on('SIGINT', () => httpServer.close(() => console.log('Server Restart')))
+type SysCallError = Error & {
+  code: string,
+  errno: number,
+  syscall: string,
+  address: string,
+  port: number
+}
+
+function listen(port) {
+  // httpsServer.listen(8443, () => console.log('Server Up (s)'))
+  httpServer.listen(port)
+  httpServer.on('listening', () => { console.log('Server Up', httpServer.address()) })
+  httpServer.on('error', e => {
+    const sce = e as SysCallError
+    if(sce.code !== 'EADDRINUSE') { console.log('Server Error', e) }
+
+    console.log('Server Address in Use, rollover')
+    httpServer.close();
+    httpServer.listen(port + 1)
+  })
+  //process.on('SIGTERM', () => { httpServer.close(() => console.log('Server Down')) })
+  process.on('SIGINT', () => httpServer.close(e => console.log('Server Restart', e)))
+}
+
+//
+listen(8080)
