@@ -1,7 +1,7 @@
 
 export function setupWorker() {
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./ui-worker.js', {scope: './SCOPE/'})
+    navigator.serviceWorker.register('./ui-worker.js', { scope: './SCOPE/' })
     .then((reg) => {
       // registration worked
       console.log('Registration succeeded. Scope is ' + reg.scope);

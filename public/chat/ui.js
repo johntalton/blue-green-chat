@@ -10,7 +10,7 @@ export async function setupUI(esPort) {
     chat: document.getElementById('chat'),
     message: document.getElementById('message'),
     send: document.getElementById('send'),
-    form: document.getElementById('form'),
+    form: document.getElementById('form')
   }
 
   form.addEventListener('submit', async event => {
@@ -21,6 +21,7 @@ export async function setupUI(esPort) {
     await UI.sendMessage(ui, message)
   })
 
+  esPort.onerror = e => console.log('es port error', e)
   esPort.onclose = () => UI.closeChat(ui, msssage)
   esPort.onmessage = msg => UI.addMessageToUI(ui, msg)
 
@@ -37,30 +38,32 @@ class UI {
     // ui.message.disabled = true
     // ui.send.disabled = true
 
-    const result = await fetch('/services/message', {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ message: message })
-    })
+    try {
+      const result = await fetch('/services/message', {
+        method: 'POST',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message: message })
+      })
 
+      if(result.status !== 200) { ui.containor.classList.add(STATE.SEND_FAILURE) }
 
-    ui.containor.classList.remove(STATE.SENDING)
-    ui.message.focus()
-
-    if(result.status !== 200) {
-      console.log('bad response - leave form alown and show send failure')
+    } catch (e) {
       ui.containor.classList.add(STATE.SEND_FAILURE)
-    } else {
-      ui.containor.classList.remove(STATE.SEND_FAILURE)
-      ui.containor.classList.add(STATE.SENT)
-      setTimeout(() => ui.containor.classList.remove(STATE.SENT), 15 * 1000)
-      ui.form.reset()
+    } finally {
+      ui.containor.classList.remove(STATE.SENDING)
+      ui.message.focus()
     }
+
+    ui.containor.classList.remove(STATE.SEND_FAILURE)
+    ui.containor.classList.add(STATE.SENT)
+    setTimeout(() => ui.containor.classList.remove(STATE.SENT), 15 * 1000)
+
+    ui.form.reset()
   }
 
   static addMessageToUI(ui, msg) {

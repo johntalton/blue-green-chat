@@ -1,18 +1,19 @@
 {
   "name": "ChatService",
+  "scope": "urn:chat",
   "endpoints": [
-    { "urn": "urn:websocket/", "url": "/ws",  "active": false },
+    { "urn": "urn:websocket/", "name": "chat",  "active": false },
 
-    { "urn": "urn:message/", "url": "/message"},
-    { "urn": "urn:event-stream/", "url": "/es/chat" }
+    { "urn": "urn:message/", "name": "message" },
+    { "urn": "urn:event-stream/", "name": "chat", "protocol": "", "active": false }
   ],
   "services": [
     { "urn": "urn:service/ws", "url": "/private/chat/ws.js", "active": false },
 
-    { "urn": "urn:service/message", "url": "/private/chat/message.js" },
-    { "urn": "urn:service/event-stream", "url": "/private/chat/event.js" },
+    { "urn": "urn:service/message", "url": "../private/chat/message" },
+    { "urn": "urn:service/event-stream", "url": "../private/chat/event" },
 
-    { "urn": "urn:service/persist", "url": "/private/chat/persist.js" }
+    { "urn": "urn:service/persist", "url": "../private/chat/persist" }
   ],
   "bindings": [
     { "from": "urn:websocket/", "to": "urn:service/message", "active": false },

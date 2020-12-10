@@ -118,8 +118,17 @@ header {
   margin: 0.25em;
 }
 
+#people {
+  display: flex;
+  width: 100%;
+}
 
-
+#people > chat-people {
+  background-color: green;
+  height: 64px;
+  width: 64px;
+  border-radius: 50%;
+}
 
 /* ******** *
  Chat window

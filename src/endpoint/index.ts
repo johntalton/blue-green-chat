@@ -6,7 +6,10 @@ import helmet from 'helmet'
 import compression from 'compression'
 import morgan from 'morgan'
 
-import { esRoute, RestService, errorHandler, notFound, rateLimiter, speedLimiter } from './use'
+import {
+  EventSourceService, RestService,
+  errorHandler, notFound, rateLimiter, speedLimiter
+} from './use'
 
 // const MORGAN_BASIC = ':method :url :status :res[content-length] @ :response-time ms'
 // eslint-disable-next-line spellcheck/spell-checker
@@ -30,7 +33,7 @@ export class EndpointService {
       .use(cors())
       .use(express.json())
       .use('/', RestService.router(restPort))
-      .use('/es', esRoute(eventStreamPort)))
+      .use('/es', EventSourceService.router(eventStreamPort)))
 
     if(true) app.use('/static', express.static('./public'))
 

@@ -5,3 +5,5 @@ lib/
 coverage/
 
 public/chat/story/*.json
+
+ssl/*

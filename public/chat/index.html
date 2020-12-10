@@ -4,17 +4,21 @@
 		<meta charset="utf-8" />
 		<meta name="color-scheme" content="dark light" />
 
+		<link rel="manifest" href="/static/manifest.json">
+		<meta name="theme-color" content="black" />
+		<link rel="icon" type="image/svg+xml" href="/static/chat/chat.svg">
+
 		<title>Chat</title>
 
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 
 		<link rel="stylesheet" type="text/css" href="../fonts/overpass-webfont-3.0.4/overpass.css"></link>
-
 		<link rel="stylesheet" href="themes/dark.css" media="(prefers-color-scheme: dark)"></link>
 		<link rel="stylesheet" href="themes/light.css" media="(prefers-color-scheme: light)"></link>
 
 		<link rel="stylesheet" type="text/css" href="chat.css"></link>
 
+		<script async type="module" src="person/person.js"></script>
 		<script async type="module" src="chat.js"></script>
 	</head>
 	<body id="containor" class="Green">
@@ -23,12 +27,18 @@
 				<label for="message"></label>
 				<input id="message" name="message" type="text" required autofocus readonly></input>
 				<label for="send"></label>
-				<button id="send" name="send" disabled>⃕</button>
+				<button id="send" name="send" disabled>💭</button>
 				<!-- <lable for="color"></lable>
 				<input id="color" name="color" type="color"></input> -->
 			</form>
 		</header>
 		<div id="failure">Failure To Send Message 🤦🏽‍♀️</div>
+		<div id="people">
+			<chat-person id="personSelf"></chat-person>
+			<chat-person></chat-person>
+			<!-- <div id="peopleSelf"></div>
+			<div id="peopleSelf"></div> -->
+		</div>
 		<main id="chat">
 		</main>
 	</body>

@@ -1,0 +1,3 @@
+# Basic web poll
+
+* [ ]

@@ -1,5 +1,5 @@
 export { RestService } from './rest-service'
-export { esRoute } from './esRoute'
+export { EventSourceService } from './event-service'
 
 export { rateLimiter } from './rate-limit'
 export { speedLimiter } from './speed-limit'
