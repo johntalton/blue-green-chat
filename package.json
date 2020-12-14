@@ -1,5 +1,5 @@
 {
-  "name": "@johntalton/event-source",
+  "name": "@johntalton/blue-green-chat",
   "version": "2.0.0",
   "description": "",
   "main": "src/index.ts",
@@ -35,7 +35,10 @@
       ".vscode",
       "node_modules"
     ],
-    "watch": [ "src", "private" ],
+    "watch": [
+      "src",
+      "private"
+    ],
     "exec": "ts-node src/index.ts",
     "ext": "ts"
   },
@@ -67,6 +70,7 @@
   },
   "homepage": "https://github.com/johntalton/event-source#readme",
   "dependencies": {
+    "@johntalton/sse-util": "^0.0.1",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "express": "^4.17.1",
@@ -82,7 +86,7 @@
     "@types/cors": "^2.8.7",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.8",
-    "@types/helmet": "0.0.48",
+    "@types/helmet": "^4.0.0",
     "@types/mocha": "^8.0.3",
     "@types/node": "^14.6.4",
     "@types/uuid": "^8.3.0",

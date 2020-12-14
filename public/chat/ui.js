@@ -13,17 +13,18 @@ export async function setupUI(esPort) {
     form: document.getElementById('form')
   }
 
-  form.addEventListener('submit', async event => {
+  ui.form.addEventListener('submit', async event => {
     event.preventDefault();
-    const formData = new FormData(form);
+    const formData = new FormData(ui.form);
     const message = formData.get('message');
 
     await UI.sendMessage(ui, message)
   })
 
   esPort.onerror = e => console.log('es port error', e)
-  esPort.onclose = () => UI.closeChat(ui, msssage)
   esPort.onmessage = msg => UI.addMessageToUI(ui, msg)
+  esPort.onopen = () => console.log('es port open')
+  esPort.addEventListener('stuff', msg => console.log('stuff', msg))
 
   ui.message.disabled = false
   ui.send.disabled = false

@@ -1,15 +1,12 @@
 import { MessageChannel, MessagePort } from 'worker_threads'
-import {
-  performance,
-  PerformanceObserver
-} from 'perf_hooks'
+//import { performance, PerformanceObserver } from 'perf_hooks'
 
 import express from 'express'
 
 import {
   ServerSentEvents,
   SSE_MIME, SSE_LAST_EVENT_ID, SSE_BOM, SSE_INACTIVE_STATUS_CODE
-} from './sse'
+} from '@johntalton/sse-util'
 
 const EVENT = {
   CLOSE: 'close',
@@ -47,15 +44,15 @@ export class EventSourceService {
     const configuration = {
       active: true,
       writeBOM: true,
-      retryTimeMs: 10 * 1000,
-      keepAliveIntervalMs: 3 * 1000
+      retryTimeMs: 1 * 1000,
+      keepAliveIntervalMs: 5 * 1000
     }
 
     route.get('/:feed', (req, res) => {
-      console.log('EventSource Route', req.params.feed)
+      console.log('EventSource Route feed: ', req.params.feed)
 
       // if the feed is in-active, then 204 will prevent client reconnects
-      if(!configuration.active) { res.status(SSE_INACTIVE_STATUS_CODE); return }
+      if(!configuration.active) { res.status(SSE_INACTIVE_STATUS_CODE).end(); return }
 
       //
       addSocketOptions(req)
@@ -68,8 +65,11 @@ export class EventSourceService {
       const lastEventID = req.header(HEADER.LAST_EVENT_ID)
 
       const channel = new MessageChannel()
-      channel.port1.addListener('message', msg => ServerSentEvents.formatMessageToEventStream(msg.data)
-          .forEach(line => res.write(line)))
+      channel.port1.addListener('message', msg => {
+        console.log('event message', msg)
+        ServerSentEvents.messageToEventStreamLines({ ...msg, data: [ JSON.stringify(msg.data) ] })
+          .forEach(line => { res.write(line) })
+      })
       // channel.port1.onmessageerror = () => { res.close(); port.postMessage({ type: EVENT.CLOSE }) }
 
       // handle client closes
@@ -85,12 +85,15 @@ export class EventSourceService {
       res.writeHead(200);
 
       // setup manual keep alive timer
-      setInterval(() => res.write(ServerSentEvents.keepAliveLine()), configuration.keepAliveIntervalMs)
+      // TODO store timer so it can be canceled
+      setInterval(() => res.write(ServerSentEvents.keepAliveToEventStreamLine()), configuration.keepAliveIntervalMs)
 
       // set retry timeout
-      res.write(ServerSentEvents.retryLine(configuration.retryTimeMs))
+      res.write(ServerSentEvents.retryToEventStreamLine(configuration.retryTimeMs))
 
-      if(configuration.writeBOM) { res.write(SSE_BOM) }
+      if(configuration.writeBOM) { res.write(SSE_BOM + '\n') }
+
+      channel.port2.postMessage({ event: 'stuff', data: { message: 'hello4' } })
 
       // inform consumer
       eventStreamPort.postMessage({
