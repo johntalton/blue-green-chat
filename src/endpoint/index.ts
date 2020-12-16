@@ -7,7 +7,8 @@ import compression from 'compression'
 import morgan from 'morgan'
 
 import {
-  EventSourceService, RestService,
+  EventSourceService,
+  RestService,
   errorHandler, notFound, rateLimiter, speedLimiter
 } from './use'
 
@@ -21,19 +22,19 @@ export class EndpointService {
     //
     app.set('trust proxy', ['loopback']);
 
-    if(false) app.use(helmet())
-    if(false) app.use(compression())
-
     app
       .use(morgan(MORGAN_EXT))
       .use(rateLimiter)
       .use(speedLimiter)
 
+    if(true) app.use(helmet())
+    if(true) app.use(compression())
+
     app.use('/services', express.Router()
-      .use(cors())
+      .use('/es', EventSourceService.router(eventStreamPort))
       .use(express.json())
-      .use('/', RestService.router(restPort))
-      .use('/es', EventSourceService.router(eventStreamPort)))
+      .use('/', cors(), RestService.router(restPort))
+    )
 
     if(true) app.use('/static', express.static('./public'))
 

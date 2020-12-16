@@ -44,15 +44,39 @@ export class EventSourceService {
     const configuration = {
       active: true,
       writeBOM: true,
-      retryTimeMs: 1 * 1000,
+      retryTimeMs: 5 * 1000,
       keepAliveIntervalMs: 5 * 1000
     }
 
+    const feeds = {}
+
+    eventStreamPort.on('message', message => {
+      if(message.type === 'addRoute') {
+        const { name, port } = message
+        console.log('Event Service Add Route', name)
+        feeds[name] = {
+          active: true,
+          // writeBOM
+          // retryTimeMs
+          // keepAliveIntervalMs
+          _count: 0,
+          port
+        }
+
+      } else {
+        console.log('Event  Service message', message)
+      }
+    })
+
     route.get('/:feed', (req, res) => {
-      console.log('EventSource Route feed: ', req.params.feed)
+      const feedName = req.params.feed
+      console.log('Event Service get feed: ', feedName)
 
       // if the feed is in-active, then 204 will prevent client reconnects
-      if(!configuration.active) { res.status(SSE_INACTIVE_STATUS_CODE).end(); return }
+      if(!configuration.active) { res.status(SSE_INACTIVE_STATUS_CODE).send(); return }
+
+      const feed = feeds[feedName] ?? { active: false }
+      if(!feed.active) { res.status(SSE_INACTIVE_STATUS_CODE).send(); return }
 
       //
       addSocketOptions(req)
@@ -66,7 +90,7 @@ export class EventSourceService {
 
       const channel = new MessageChannel()
       channel.port1.addListener('message', msg => {
-        console.log('event message', msg)
+        // console.log('event message', msg)
         ServerSentEvents.messageToEventStreamLines({ ...msg, data: [ JSON.stringify(msg.data) ] })
           .forEach(line => { res.write(line) })
       })
@@ -93,12 +117,12 @@ export class EventSourceService {
 
       if(configuration.writeBOM) { res.write(SSE_BOM + '\n') }
 
-      channel.port2.postMessage({ event: 'stuff', data: { message: 'hello4' } })
+      //channel.port2.postMessage({ event: 'debug', data: { message: 'inline debug - priort to transfer' } })
 
       // inform consumer
-      eventStreamPort.postMessage({
+      feed.port.postMessage({
         type: EVENT.CONNECT,
-        feed: req.params.feed,
+        feed: feedName,
         lastEventID,
         port: channel.port2
       }, [ channel.port2 ])

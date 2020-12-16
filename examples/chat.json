@@ -1,17 +1,18 @@
 {
-  "name": "ChatService",
+  "name": "BlueGreenChat",
   "scope": "urn:chat",
   "endpoints": [
     { "urn": "urn:websocket/", "name": "chat",  "active": false },
 
     { "urn": "urn:message/", "name": "message" },
-    { "urn": "urn:event-stream/", "name": "chat", "protocol": "", "active": false }
+    { "urn": "urn:event-stream/", "name": "chat", "protocol": "server-sent-event", "active": true }
   ],
   "services": [
     { "urn": "urn:service/ws", "url": "/private/chat/ws.js", "active": false },
 
     { "urn": "urn:service/message", "url": "../private/chat/message" },
     { "urn": "urn:service/event-stream", "url": "../private/chat/event" },
+    { "urn": "urn:service/subscription", "url": "../private/chat/subscription", "active": false },
 
     { "urn": "urn:service/persist", "url": "../private/chat/persist" }
   ],
@@ -20,7 +21,9 @@
     { "from": "urn:service/persist", "to": "urn:service/ws", "active": false },
 
     { "from": "urn:message/", "to": "urn:service/message" },
-    { "from": "urn:event-stream/", "to": "urn:service/event-stream" }
+    { "from": "urn:event-stream/", "to": "urn:service/event-stream" },
+
+    { "from": "urn:service/event-stream", "to": "urn:service/subscription" }
   ],
   "scripts": [
     { "url": "/private/chat/log.js", "src": "port.on('message', m => Storage.update('urn:storage/log', m))" }

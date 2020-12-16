@@ -4,11 +4,12 @@ import { v4 as uuidv4 } from 'uuid'
 const clientPorts: Array<{ uuid: string, port: MessagePort }> = []
 
 async function handleConnect(msg) {
-  console.log('event: client connection - welcome')
+  console.log('Event Service: client connection - welcome')
   clientPorts.push({ port: msg.data.port, uuid: uuidv4() })
 }
 
 async function handleBroadcast(msg) {
+  console.log('Event Service: broadcast message', msg.data)
   clientPorts.forEach(client => client.port.postMessage({ uuid: client.uuid, data: msg.data.body }))
 }
 

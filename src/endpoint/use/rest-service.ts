@@ -8,7 +8,14 @@ export class RestService {
     const routes = {}
 
     port.addListener('message', msg => {
-      routes[msg.name] = {}
+      if(msg.type === 'addRoute') {
+        console.log('Rest Service Adding Route', msg.name)
+        routes[msg.name] = {
+          active: true,
+          _create_count: 0,
+          port: msg.port
+        }
+      } else { console.log('unknown message', msg) }
     })
 
     router.get('/', (req, res) => {
@@ -20,9 +27,18 @@ export class RestService {
       const { body } = req;
       const type = 'http.' + req.method;
 
-      //if(!validScope(scope)) { res.status(404).send(); }
+      const route = routes[name] ?? { active: false }
 
-      port.postMessage({
+      if(!route.active) {
+        console.log('inactive route', name)
+        res.status(404).send()
+        return
+      }
+
+      route._create_count += 1
+      console.log('Rest Service', type, name, route._create_count)
+
+      route.port.postMessage({
         type, name, body
       })
 

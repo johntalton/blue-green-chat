@@ -24,7 +24,7 @@ export async function setupUI(esPort) {
   esPort.onerror = e => console.log('es port error', e)
   esPort.onmessage = msg => UI.addMessageToUI(ui, msg)
   esPort.onopen = () => console.log('es port open')
-  esPort.addEventListener('stuff', msg => console.log('stuff', msg))
+  esPort.addEventListener('debug', msg => console.log('debug event', msg))
 
   ui.message.disabled = false
   ui.send.disabled = false
