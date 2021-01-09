@@ -25,8 +25,8 @@ export class HttpServices {
   }
 
   static async fsCreds() {
-    const key = await fs.readFile('ssl/key.pem', 'utf-8');
-    const cert = await fs.readFile('ssl/cert.pem', 'utf-8');
-    return { key, cert };
+    const key = await fs.readFile('ssl/key.pem', 'utf-8')
+    const cert = await fs.readFile('ssl/cert.pem', 'utf-8')
+    return { key, cert }
   }
 }

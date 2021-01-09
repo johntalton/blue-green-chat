@@ -23,9 +23,9 @@ export class RestService {
     })
 
     router.post('/:name', (req, res) => {
-      const { name } = req.params;
-      const { body } = req;
-      const type = 'http.' + req.method;
+      const { name } = req.params
+      const { body } = req
+      const type = 'http.' + req.method
 
       const route = routes[name] ?? { active: false }
 

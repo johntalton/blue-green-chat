@@ -20,12 +20,13 @@ export class EndpointService {
   static endpoint(restPort: MessagePort, eventStreamPort: MessagePort) {
     const app = express()
     //
-    app.set('trust proxy', ['loopback']);
+    app.set('trust proxy', ['loopback'])
 
     app
       .use(morgan(MORGAN_EXT))
       .use(rateLimiter)
       .use(speedLimiter)
+
 
     if(true) app.use(helmet())
     if(true) app.use(compression())

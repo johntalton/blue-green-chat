@@ -56,7 +56,7 @@ const BINDINGS = [
 ]
 
 async function loadEndpoint(env, endpoint: Endpoint, port: MessagePort) {
-  //console.log('Load Endpoint', endpoint)
+  // console.log('Load Endpoint', endpoint)
   if(endpoint.active === false) { return }
 
   const peer = endpoint.protocol === 'server-sent-event' ? env.sse : env.web
@@ -73,7 +73,7 @@ async function loadEndpoints(env: Environment, endpoints: Array<Endpoint>): Prom
 }
 
 async function loadService(service: Service, port: MessagePort) {
-  //console.log('Load Service', service)
+  // console.log('Load Service', service)
 
   if(service.active === false) { return }
   try {
@@ -93,7 +93,7 @@ async function loadServices(services: Array<Service>): Promise<Array<NamedPort>>
 }
 
 async function loadBinding(binding: Binding, registry: Array<RegistryEntry>): Promise<void> {
-  //console.log('Loading binding', binding)
+  // console.log('Loading binding', binding)
 
   if(binding.active === false) { return }
 
@@ -108,7 +108,7 @@ async function loadBinding(binding: Binding, registry: Array<RegistryEntry>): Pr
       return
     }
 
-    //console.log(' adding binding', from, to)
+    // console.log(' adding binding', from, to)
     fromPort.on('message', msg => {
       console.log('\t', msg.type, from, '👉', to, transfer)
       if(transfer && msg.port !== undefined) {
@@ -140,23 +140,10 @@ async function up() {
     ...await loadEndpoints(serviceEnv, config.endpoints),
     ...await loadServices(config.services)
   ]
-  //.reduce((acc, item) => { acc.concat(item); return acc }, [])
+  // .reduce((acc, item) => { acc.concat(item); return acc }, [])
 
   console.log('Binding ...')
   await loadBindings(BINDINGS, registry)
 }
 
 up()
-
-/*
-channels.endpoint.rest.port2.on('message', msg => {
-  // channels.script.message.port2.postMessage({ type: msg.data.type, body: msg.data.body })
-  channels.script.event.port2.postMessage({ type: 'broadcast', body: msg.body })
-  channels.script.persist.port2.postMessage({ type: 'persist', data: msg.body })
-})
-channels.endpoint.eventstream.port2.on('message', msg => {
-  console.log('proxy message', msg)
-
-  channels.script.event.port2.postMessage({ type: 'connect', port: msg.port }, [msg.port])
-})
-*/

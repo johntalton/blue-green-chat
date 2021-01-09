@@ -22,9 +22,9 @@ const HEADER = {
 }
 
 function addHeaders(res: express.Response, manualKeepAlive: boolean) {
-  res.setHeader(HEADER.CONTENT_TYPE, SSE_MIME);
-  res.setHeader(HEADER.CACHE_CONTROL, 'no-cache, no-transform');
-  res.setHeader(HEADER.X_ACCEL_BUFFERING, 'no');
+  res.setHeader(HEADER.CONTENT_TYPE, SSE_MIME)
+  res.setHeader(HEADER.CACHE_CONTROL, 'no-cache, no-transform')
+  res.setHeader(HEADER.X_ACCEL_BUFFERING, 'no')
   if(manualKeepAlive) { res.setHeader(HEADER.CONNECTION, 'keep-alive') }
   // Keep-Alive: timeout=<seconds>, max=1000
   // res.setHeader('Content-Encoding', 'deflate'); // gzip deflate br
@@ -32,9 +32,9 @@ function addHeaders(res: express.Response, manualKeepAlive: boolean) {
 
 function addSocketOptions(req: express.Request) {
   const timeout = 0 // Infinity
-  req.socket.setNoDelay(true);
-  req.socket.setKeepAlive(true);
-  req.socket.setTimeout(timeout);
+  req.socket.setNoDelay(true)
+  req.socket.setKeepAlive(true)
+  req.socket.setTimeout(timeout)
 }
 
 export class EventSourceService {
@@ -117,7 +117,7 @@ export class EventSourceService {
 
       if(configuration.writeBOM) { res.write(SSE_BOM + '\n') }
 
-      //channel.port2.postMessage({ event: 'debug', data: { message: 'inline debug - priort to transfer' } })
+      // channel.port2.postMessage({ event: 'debug', data: { message: 'inline debug - before transfer' } })
 
       // inform consumer
       feed.port.postMessage({

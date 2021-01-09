@@ -7,14 +7,14 @@ const WRITE_EXCLUSIVE_FLAG = 'wx'
 
 export class FS {
   private base: string
-  private extention: string
+  private extension: string
 
   constructor(base) {
     this.base = base
-    this.extention = DOT_JSON_EXT
+    this.extension = DOT_JSON_EXT
   }
 
-  uuidToPath(uuid) { return path.resolve(path.join(this.base, uuid + this.extention)) }
+  uuidToPath(uuid) { return path.resolve(path.join(this.base, uuid + this.extension)) }
 
   async write(uuid, data) {
     const name = this.uuidToPath(uuid)
