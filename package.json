@@ -15,10 +15,12 @@
     "lib/**/*.js.map"
   ],
   "types": "lib/index.d.ts",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "scripts": {
     "lint": "npm --silent run lint:ts",
-    "Xlint:ts": "./node_modules/.bin/eslint --ext .ts src/*.ts",
-    "lint:ts": "./node_modules/.bin/eslint --no-inline-config --report-unused-disable-directives --ext .ts src/*.ts",
+    "lint:ts": "./node_modules/.bin/eslint --no-inline-config --report-unused-disable-directives --ext .ts src/",
     "test": "npm run test:mocha",
     "test:mocha": "mocha",
     "Xstart": "node --loader ts-node/esm.mjs  --require ts-node/register ./src/index.ts",
@@ -31,10 +33,11 @@
   },
   "eslintConfig": {
     "extends": [
-      "@johntalton/eslint-config/ts"
+      "@johntalton/eslint-config/ts",
+      "@johntalton/eslint-config/node"
     ],
-    "env": {
-      "node": true
+    "rules": {
+      "import/no-nodejs-modules": "off"
     }
   },
   "nodemonConfig": {
@@ -70,14 +73,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/johntalton/event-source.git"
+    "url": "git+https://github.com/johntalton/blue-green-chat.git"
   },
   "author": "johntalton@gmail.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/johntalton/event-source/issues"
+    "url": "https://github.com/johntalton/blue-green-chat/issues"
   },
-  "homepage": "https://github.com/johntalton/event-source#readme",
+  "homepage": "https://github.com/johntalton/blue-green-chat#readme",
   "dependencies": {
     "@johntalton/sse-util": "^0.0.1",
     "compression": "^1.7.4",

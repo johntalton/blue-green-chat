@@ -1,5 +1,5 @@
 import { MessageChannel, MessagePort } from 'worker_threads'
-//import { performance, PerformanceObserver } from 'perf_hooks'
+// import { performance, PerformanceObserver } from 'perf_hooks'
 
 import express from 'express'
 
@@ -106,7 +106,7 @@ export class EventSourceService {
       res.on('close', () => console.log('close on the res'))
 
       // end http setup of event stream by sending OK (200)
-      res.writeHead(200);
+      res.writeHead(200)
 
       // setup manual keep alive timer
       // TODO store timer so it can be canceled

@@ -19,7 +19,7 @@ type EndpointProtocol = string | 'http' | 'https' | 'https2' | 'websocket' | 'se
 type Endpoint = NamedActive & { name: UrlPath, protocol: EndpointProtocol }
 type Service = NamedActive & { url: FsPath }
 // type Script = NamedActive & { src: CodeString }
-// type Gatway = NamedActive & { url: UrlPath }
+// type Gateway = NamedActive & { url: UrlPath }
 // type Store = NamedActive & { url: FsPath }
 
 type Binding = Active & { to: Urn, from: Urn, transfer?: boolean }
